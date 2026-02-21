@@ -66,7 +66,7 @@ export function ChatContainer({ chatbot }: ChatContainerProps) {
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full overflow-hidden">
       <ChatHeader chatbot={chatbot} onClear={handleClear} />
       <MessageList
         messages={messages}

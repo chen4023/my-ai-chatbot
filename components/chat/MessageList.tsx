@@ -33,14 +33,14 @@ export function MessageList({
 
   if (messages.length === 0) {
     return (
-      <div className="flex-1 flex items-center justify-center text-muted-foreground">
+      <div className="flex-1 min-h-0 flex items-center justify-center text-muted-foreground">
         <p>대화를 시작해보세요!</p>
       </div>
     );
   }
 
   return (
-    <ScrollArea className="flex-1">
+    <ScrollArea className="flex-1 min-h-0 overflow-y-scroll">
       <div className="flex flex-col">
         {messages.map((message) => (
           <MessageBubble
