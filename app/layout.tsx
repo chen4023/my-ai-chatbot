@@ -9,7 +9,7 @@ const mulmaru = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "AI Chatbot Studio",
+  title: "AI Studio",
   description: "나만의 맞춤형 AI 챗봇을 만들어보세요",
 };
 

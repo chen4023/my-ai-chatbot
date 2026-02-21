@@ -30,7 +30,7 @@ export default function HomePage() {
               <Sparkles className="absolute -top-1 -right-1 h-4 w-4 text-pink-300 animate-sparkle" />
             </div>
             <h1 className="text-2xl font-bold gradient-text">
-              AI Chatbot Studio
+              AI Studio
             </h1>
           </div>
           <div className="flex items-center gap-3 animate-slide-in-right">
