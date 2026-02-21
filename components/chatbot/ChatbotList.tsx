@@ -17,8 +17,6 @@ export function ChatbotList() {
           <div className="w-32 h-32 rounded-full bg-linear-to-br from-pink-100 to-pink-200 flex items-center justify-center animate-pulse-glow">
             <Bot className="h-16 w-16 text-pink-400" />
           </div>
-          <Sparkles className="absolute -top-2 -right-2 h-8 w-8 text-pink-300 animate-sparkle" />
-          <Heart className="absolute -bottom-2 -left-2 h-6 w-6 text-pink-300 animate-float" />
         </div>
 
         <h2 className="text-2xl font-bold mb-3 gradient-text">
