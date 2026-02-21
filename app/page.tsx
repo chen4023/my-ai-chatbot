@@ -6,6 +6,7 @@ import { ChatbotList } from '@/components/chatbot/ChatbotList';
 import { ApiKeyDialog } from '@/components/settings/ApiKeyDialog';
 import { Plus, Sparkles } from 'lucide-react';
 import Image from 'next/image';
+import { Chatbot } from '../lib/types/chatbot';
 
 export default function HomePage() {
   return (
@@ -29,8 +30,8 @@ export default function HomePage() {
               />
               <Sparkles className="absolute -top-1 -right-1 h-4 w-4 text-pink-300 animate-sparkle" />
             </div>
-            <h1 className="text-2xl font-bold gradient-text">
-              AI Studio
+            <h1 className="text-2xl font-bold gradient-text hidden md:block">
+              AI Chatbot Studio
             </h1>
           </div>
           <div className="flex items-center gap-3 animate-slide-in-right">
