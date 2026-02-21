@@ -159,7 +159,7 @@ export function ApiKeyDialog() {
           </Button>
           <Button
             onClick={handleSave}
-            className="bg-gradient-to-r from-pink-300 to-pink-400 hover:from-pink-400 hover:to-pink-500 text-white rounded-xl btn-glow border-0 transition-all duration-300"
+            className="bg-linear-to-r from-pink-300 to-pink-400 hover:from-pink-400 hover:to-pink-500 text-white rounded-xl btn-glow border-0 transition-all duration-300"
           >
             <Sparkles className="h-4 w-4 mr-2" />
             저장하기
