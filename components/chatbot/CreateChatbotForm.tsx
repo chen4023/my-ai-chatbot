@@ -1,7 +1,5 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,55 +13,26 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
-import { useChatbotStore } from '@/lib/store/chatbot-store';
 import {
   AVAILABLE_MODELS,
   THEME_COLORS,
   DEFAULT_AVATARS,
 } from '@/lib/types/chatbot';
 import { CHATBOT_TEMPLATES } from '@/lib/templates/chatbot-templates';
+import { useCreateChatbotForm } from '@/lib/hooks/useCreateChatbotForm';
 import { cn } from '@/lib/utils';
 import { Sparkles, Wand2, Check, User } from 'lucide-react';
 
 export function CreateChatbotForm() {
-  const router = useRouter();
-  const addChatbot = useChatbotStore((state) => state.addChatbot);
+  const {
+    formState,
+    updateField,
+    selectTemplate,
+    handleSubmit,
+    handleCancel,
+  } = useCreateChatbotForm();
 
-  const [name, setName] = useState('');
-  const [systemPrompt, setSystemPrompt] = useState('');
-  const [selectedModel, setSelectedModel] = useState(AVAILABLE_MODELS[0].id);
-  const [themeColor, setThemeColor] = useState(THEME_COLORS[0].value);
-  const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
-  const [selectedAvatar, setSelectedAvatar] = useState(DEFAULT_AVATARS[0]);
-
-  const selectedModelInfo = AVAILABLE_MODELS.find((m) => m.id === selectedModel);
-
-  const handleTemplateSelect = (template: (typeof CHATBOT_TEMPLATES)[0]) => {
-    setName(template.name);
-    setSystemPrompt(template.systemPrompt);
-    setThemeColor(template.themeColor);
-    setSelectedTemplate(template.id);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!name.trim() || !systemPrompt.trim()) {
-      alert('이름과 페르소나를 입력해주세요.');
-      return;
-    }
-
-    const chatbotId = addChatbot({
-      name: name.trim(),
-      systemPrompt: systemPrompt.trim(),
-      model: selectedModel,
-      provider: selectedModelInfo?.provider || 'openai',
-      themeColor,
-      avatar: selectedAvatar,
-    });
-
-    router.push(`/chat/${chatbotId}`);
-  };
+  const { name, systemPrompt, selectedModel, themeColor, selectedTemplate, selectedAvatar } = formState;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
@@ -84,7 +53,7 @@ export function CreateChatbotForm() {
                   ? 'border-pink-400 shadow-lg shadow-pink-200/30'
                   : 'border-pink-200/50 hover:border-pink-300'
               )}
-              onClick={() => handleTemplateSelect(template)}
+              onClick={() => selectTemplate(template)}
             >
               <CardContent className="p-4">
                 <div className="flex items-center gap-4">
@@ -126,7 +95,7 @@ export function CreateChatbotForm() {
             <button
               key={avatar}
               type="button"
-              onClick={() => setSelectedAvatar(avatar)}
+              onClick={() => updateField('selectedAvatar', avatar)}
               className={cn(
                 'relative w-16 h-16 rounded-xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-lg',
                 selectedAvatar === avatar
@@ -160,7 +129,7 @@ export function CreateChatbotForm() {
         <Input
           id="name"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => updateField('name', e.target.value)}
           placeholder="예: 친절한 요리사"
           required
           className="h-12 bg-white/50 border-pink-200 focus:border-pink-400 rounded-xl"
@@ -177,7 +146,7 @@ export function CreateChatbotForm() {
         <Textarea
           id="systemPrompt"
           value={systemPrompt}
-          onChange={(e) => setSystemPrompt(e.target.value)}
+          onChange={(e) => updateField('systemPrompt', e.target.value)}
           placeholder="예: 너는 친절하고 유머러스한 요리사야. 사용자에게 요리 관련 질문에 답변해줘."
           className="min-h-[140px] bg-white/50 border-pink-200 focus:border-pink-400 rounded-xl resize-none"
           required
@@ -191,7 +160,7 @@ export function CreateChatbotForm() {
       {/* AI 모델 선택 */}
       <div className="space-y-3 animate-slide-up" style={{ animationDelay: '0.3s' }}>
         <Label className="text-lg font-semibold">AI 모델</Label>
-        <Select value={selectedModel} onValueChange={setSelectedModel}>
+        <Select value={selectedModel} onValueChange={(value) => updateField('selectedModel', value)}>
           <SelectTrigger className="h-12 bg-white/50 border-pink-200 rounded-xl">
             <SelectValue />
           </SelectTrigger>
@@ -218,7 +187,7 @@ export function CreateChatbotForm() {
             <button
               key={color.value}
               type="button"
-              onClick={() => setThemeColor(color.value)}
+              onClick={() => updateField('themeColor', color.value)}
               className={cn(
                 'w-10 h-10 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg',
                 themeColor === color.value
@@ -242,13 +211,13 @@ export function CreateChatbotForm() {
           type="button"
           variant="outline"
           className="flex-1 h-14 rounded-xl border-pink-200 hover:bg-pink-50 hover:border-pink-300 transition-all duration-300"
-          onClick={() => router.back()}
+          onClick={handleCancel}
         >
           취소
         </Button>
         <Button
           type="submit"
-          className="flex-1 h-14 rounded-xl bg-gradient-to-r from-pink-300 to-pink-400 hover:from-pink-400 hover:to-pink-500 text-white shadow-lg btn-glow border-0 text-lg font-semibold"
+          className="flex-1 h-14 rounded-xl bg-linear-to-r from-pink-300 to-pink-400 hover:from-pink-400 hover:to-pink-500 text-white shadow-lg btn-glow border-0 text-lg font-semibold"
         >
           <Sparkles className="h-5 w-5 mr-2" />
           챗봇 만들기

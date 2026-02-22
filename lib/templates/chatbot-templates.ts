@@ -1,4 +1,13 @@
-export const CHATBOT_TEMPLATES = [
+export interface ChatbotTemplate {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  systemPrompt: string;
+  themeColor: string;
+}
+
+export const CHATBOT_TEMPLATES: ChatbotTemplate[] = [
   {
     id: 'friendly-assistant',
     name: '친절한 어시스턴트',
