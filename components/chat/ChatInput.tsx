@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Send, Loader2, Sparkles } from 'lucide-react';
+import { Send, Sparkles } from 'lucide-react';
 
 interface ChatInputProps {
   onSend: (message: string) => void;
@@ -13,7 +13,6 @@ interface ChatInputProps {
 
 export function ChatInput({ onSend, isLoading, disabled }: ChatInputProps) {
   const [input, setInput] = useState('');
-  const [isFocused, setIsFocused] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSubmit = () => {
@@ -44,11 +43,9 @@ export function ChatInput({ onSend, isLoading, disabled }: ChatInputProps) {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
           placeholder="메시지를 입력하세요..."
           disabled={isLoading || disabled}
-          className="min-h-[44px] max-h-[150px] resize-none border-0 bg-transparent focus:ring-0 focus-visible:ring-0 focus:outline-none shadow-none focus:shadow-none focus-visible:shadow-none !ring-0 !outline-none"
+          className="min-h-[44px] max-h-[150px] resize-none border-0 bg-transparent shadow-none ring-0! outline-none!"
           rows={1}
         />
         <Button
@@ -58,7 +55,7 @@ export function ChatInput({ onSend, isLoading, disabled }: ChatInputProps) {
           className={`
             shrink-0 h-[44px] w-[44px] rounded-xl transition-all duration-300
             ${input.trim()
-              ? 'bg-gradient-to-r from-pink-300 to-pink-400 hover:from-pink-400 hover:to-pink-500 shadow-lg hover:shadow-pink-300/50 hover:scale-105'
+              ? 'bg-linear-to-r from-pink-300 to-pink-400 hover:from-pink-400 hover:to-pink-500 shadow-lg hover:shadow-pink-300/50 hover:scale-105'
               : 'bg-pink-200 text-pink-400'
             }
           `}

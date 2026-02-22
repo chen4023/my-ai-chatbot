@@ -27,7 +27,7 @@ export function ChatbotCard({ chatbot }: ChatbotCardProps) {
     <Link href={`/chat/${chatbot.id}`}>
       <Card className="group glass-card interactive-card cursor-pointer h-full border-pink-200/50 hover:border-pink-300 overflow-hidden relative">
         {/* Gradient overlay on hover */}
-        <div className="absolute inset-0 bg-gradient-to-br from-pink-100/0 to-pink-200/0 group-hover:from-pink-100/30 group-hover:to-pink-200/20 transition-all duration-500" />
+        <div className="absolute inset-0 bg-linear-to-br from-pink-100/0 to-pink-200/0 group-hover:from-pink-100/30 group-hover:to-pink-200/20 transition-all duration-500" />
 
         <CardContent className="p-5 relative z-10">
           <div className="flex items-start gap-4">
