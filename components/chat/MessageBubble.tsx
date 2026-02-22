@@ -1,9 +1,34 @@
 'use client';
 
 import ReactMarkdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import oneDark from 'react-syntax-highlighter/dist/cjs/styles/prism/one-dark';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { User, Bot, Heart } from 'lucide-react';
+import { User, Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
+
+function getLanguageFromClassName(className?: string): string {
+  if (!className) return 'text';
+  const match = className.match(/language-(\w+)/);
+  return match ? match[1] : 'text';
+}
+
+const roleConfig = {
+  user: {
+    container: 'flex-row-reverse animate-slide-in-right',
+    avatarRing: 'ring-pink-200',
+    bubble: 'bg-pink-400 text-white rounded-tr-sm',
+    prose: 'prose-invert',
+    showHeart: false,
+  },
+  assistant: {
+    container: 'flex-row animate-slide-in-left',
+    avatarRing: 'ring-pink-300',
+    bubble: 'bg-white/80 backdrop-blur-sm border border-pink-100 rounded-tl-sm',
+    prose: 'prose-pink',
+    showHeart: true,
+  },
+} as const;
 
 interface MessageBubbleProps {
   role: 'user' | 'assistant';
@@ -20,37 +45,27 @@ export function MessageBubble({
   avatarUrl,
   botName,
 }: MessageBubbleProps) {
-  const isUser = role === 'user';
+  const config = roleConfig[role];
 
   return (
-    <div
-      className={cn(
-        'flex gap-3 p-4 message-enter',
-        isUser ? 'flex-row-reverse animate-slide-in-right' : 'flex-row animate-slide-in-left'
-      )}
-    >
+    <div className={cn('flex gap-3 p-4 message-enter', config.container)}>
       <div className="relative">
         <Avatar className={cn(
           'h-10 w-10 shrink-0 ring-2 transition-all duration-300',
-          isUser ? 'ring-pink-200' : 'ring-pink-300'
+          config.avatarRing
         )}>
-          {isUser ? (
-            <AvatarFallback className="bg-pink-200 from-pink-200 to-pink-300">
+          {role === 'user' ? (
+            <AvatarFallback className="bg-pink-200">
               <User className="h-5 w-5 text-pink-600" />
             </AvatarFallback>
           ) : (
             <>
               <AvatarImage src={avatarUrl || '/split_image_1.png'} alt={botName} />
-              <AvatarFallback
-                className="text-white"
-                style={{ backgroundColor: themeColor }}
-              >
-                <Bot className="h-5 w-5" />
-              </AvatarFallback>
+              <AvatarFallback className={`text-white bg-${themeColor}`} />
             </>
           )}
         </Avatar>
-        {!isUser && (
+        {config.showHeart && (
           <Heart className="absolute -bottom-1 -right-1 h-4 w-4 text-pink-400 fill-pink-400 animate-pulse" />
         )}
       </div>
@@ -58,30 +73,39 @@ export function MessageBubble({
       <div
         className={cn(
           'max-w-[75%] rounded-2xl px-4 py-3 shadow-sm transition-all duration-300 hover:shadow-md',
-          isUser
-            ? 'bg-pink-400 from-pink-300 to-pink-400 text-white rounded-tr-sm'
-            : 'bg-white/80 backdrop-blur-sm border border-pink-100 rounded-tl-sm'
+          config.bubble
         )}
       >
-        <div className={cn(
-          'prose prose-sm max-w-none',
-          isUser ? 'prose-invert' : 'prose-pink'
-        )}>
+        <div className={cn('prose prose-sm max-w-none', config.prose)}>
           <ReactMarkdown
             components={{
               pre: ({ children }) => (
-                <pre className="bg-gray-800 text-gray-100 rounded-xl p-3 overflow-x-auto my-2 shadow-inner">
+                <div className="my-2 rounded-xl overflow-hidden [&>div]:rounded-xl">
                   {children}
-                </pre>
+                </div>
               ),
               code: ({ children, className }) => {
                 const isInline = !className;
-                return isInline ? (
-                  <code className="bg-pink-100 text-pink-700 px-1.5 py-0.5 rounded-md text-sm font-medium">
-                    {children}
-                  </code>
-                ) : (
-                  <code>{children}</code>
+                if (isInline) {
+                  return (
+                    <code className="bg-pink-100 text-pink-700 px-1.5 py-0.5 rounded-md text-sm font-medium">
+                      {children}
+                    </code>
+                  );
+                }
+                const language = getLanguageFromClassName(className);
+                const codeString = String(children).replace(/\n$/, '');
+                return (
+                  <SyntaxHighlighter
+                    language={language}
+                    style={oneDark}
+                    PreTag="div"
+                    customStyle={{ margin: 0 }}
+                    codeTagProps={{ className: 'text-sm' }}
+                    showLineNumbers={false}
+                  >
+                    {codeString}
+                  </SyntaxHighlighter>
                 );
               },
               p: ({ children }) => (
