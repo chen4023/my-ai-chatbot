@@ -6,7 +6,6 @@ import { ChatbotList } from '@/components/chatbot/ChatbotList';
 import { ApiKeyDialog } from '@/components/settings/ApiKeyDialog';
 import { Plus, Sparkles } from 'lucide-react';
 import Image from 'next/image';
-import { Chatbot } from '../lib/types/chatbot';
 
 export default function HomePage() {
   return (

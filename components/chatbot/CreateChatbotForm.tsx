@@ -96,8 +96,10 @@ export function CreateChatbotForm() {
               key={avatar}
               type="button"
               onClick={() => updateField('selectedAvatar', avatar)}
+              aria-label={`아바타 ${index + 1} 선택${selectedAvatar === avatar ? ' (선택됨)' : ''}`}
+              aria-pressed={selectedAvatar === avatar}
               className={cn(
-                'relative w-16 h-16 rounded-xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-lg',
+                'relative w-16 h-16 rounded-xl overflow-hidden transition-[transform,box-shadow,opacity] duration-300 shadow-md hover:shadow-lg focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2',
                 selectedAvatar === avatar
                   ? 'ring-4 ring-pink-300 ring-offset-2 scale-110'
                   : 'hover:scale-105 opacity-70 hover:opacity-100'
@@ -105,7 +107,7 @@ export function CreateChatbotForm() {
             >
               <Image
                 src={avatar}
-                alt={`Avatar ${index + 1}`}
+                alt={`아바타 ${index + 1}`}
                 fill
                 className="object-cover"
               />
@@ -188,8 +190,10 @@ export function CreateChatbotForm() {
               key={color.value}
               type="button"
               onClick={() => updateField('themeColor', color.value)}
+              aria-label={`${color.name} 테마 선택${themeColor === color.value ? ' (선택됨)' : ''}`}
+              aria-pressed={themeColor === color.value}
               className={cn(
-                'w-10 h-10 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg',
+                'w-10 h-10 rounded-xl transition-[transform,box-shadow] duration-300 shadow-md hover:shadow-lg focus-visible:ring-2 focus-visible:ring-pink-400 focus-visible:ring-offset-2',
                 themeColor === color.value
                   ? 'ring-4 ring-pink-300 ring-offset-2 scale-110'
                   : 'hover:scale-105'
@@ -198,7 +202,7 @@ export function CreateChatbotForm() {
               title={color.name}
             >
               {themeColor === color.value && (
-                <Check className="h-5 w-5 text-white mx-auto" />
+                <Check className="h-5 w-5 text-white mx-auto" aria-hidden="true" />
               )}
             </button>
           ))}

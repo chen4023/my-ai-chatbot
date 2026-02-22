@@ -1,11 +1,32 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import ReactMarkdown from 'react-markdown';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import oneDark from 'react-syntax-highlighter/dist/esm/styles/prism/one-dark';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { User, Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
+
+// 동적 import로 번들 사이즈 최적화
+const SyntaxHighlighter = dynamic(
+  () => import('react-syntax-highlighter').then((mod) => mod.Prism),
+  { ssr: false, loading: () => <div className="animate-pulse bg-gray-200 rounded h-20" /> }
+);
+
+// CodeBlock 컴포넌트 - 동적 스타일 로드
+function CodeBlock({ language, children }: { language: string; children: string }) {
+  return (
+    <SyntaxHighlighter
+      language={language}
+      style={require('react-syntax-highlighter/dist/esm/styles/prism/one-dark').default}
+      PreTag="div"
+      customStyle={{ margin: 0 }}
+      codeTagProps={{ className: 'text-sm' }}
+      showLineNumbers={false}
+    >
+      {children}
+    </SyntaxHighlighter>
+  );
+}
 
 function getLanguageFromClassName(className?: string): string {
   if (!className) return 'text';
@@ -51,7 +72,7 @@ export function MessageBubble({
     <div className={cn('flex gap-3 p-4 message-enter', config.container)}>
       <div className="relative">
         <Avatar className={cn(
-          'h-10 w-10 shrink-0 ring-2 transition-all duration-300',
+          'h-10 w-10 shrink-0 ring-2 transition-[transform,opacity] duration-300',
           config.avatarRing
         )}>
           {role === 'user' ? (
@@ -72,7 +93,7 @@ export function MessageBubble({
 
       <div
         className={cn(
-          'max-w-[75%] rounded-2xl px-4 py-3 shadow-sm transition-all duration-300 hover:shadow-md',
+          'max-w-[75%] rounded-2xl px-4 py-3 shadow-sm transition-shadow duration-300 hover:shadow-md',
           config.bubble
         )}
       >
@@ -96,16 +117,7 @@ export function MessageBubble({
                 const language = getLanguageFromClassName(className);
                 const codeString = String(children).replace(/\n$/, '');
                 return (
-                  <SyntaxHighlighter
-                    language={language}
-                    style={oneDark}
-                    PreTag="div"
-                    customStyle={{ margin: 0 }}
-                    codeTagProps={{ className: 'text-sm' }}
-                    showLineNumbers={false}
-                  >
-                    {codeString}
-                  </SyntaxHighlighter>
+                  <CodeBlock language={language}>{codeString}</CodeBlock>
                 );
               },
               p: ({ children }) => (

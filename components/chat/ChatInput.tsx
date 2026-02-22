@@ -37,7 +37,7 @@ export function ChatInput({ onSend, isLoading, disabled }: ChatInputProps) {
 
   return (
     <div className="p-4 border-t border-pink-200/50 bg-background/80 backdrop-blur-md">
-      <div className='flex gap-3 p-2 rounded-2xl bg-white/50 border-2 transition-all duration-300'>
+      <div className='flex gap-3 p-2 rounded-2xl bg-white/50 border-2 transition-[color,box-shadow] duration-300'>
         <Textarea
           ref={textareaRef}
           value={input}
@@ -45,15 +45,16 @@ export function ChatInput({ onSend, isLoading, disabled }: ChatInputProps) {
           onKeyDown={handleKeyDown}
           placeholder="메시지를 입력하세요..."
           disabled={isLoading || disabled}
-          className="min-h-[44px] max-h-[150px] resize-none border-0 bg-transparent shadow-none ring-0! outline-none!"
+          className="min-h-[44px] max-h-[150px] resize-none border-0 bg-transparent shadow-none focus:ring-0 focus-visible:ring-2 focus-visible:ring-pink-300 focus-visible:ring-offset-0"
           rows={1}
         />
         <Button
           onClick={handleSubmit}
           disabled={!input.trim() || isLoading || disabled}
           size="icon"
+          aria-label={isLoading ? "메시지 전송 중" : "메시지 전송"}
           className={`
-            shrink-0 h-[44px] w-[44px] rounded-xl transition-all duration-300
+            shrink-0 h-[44px] w-[44px] rounded-xl transition-[transform,box-shadow] duration-300
             ${input.trim()
               ? 'bg-linear-to-r from-pink-300 to-pink-400 hover:from-pink-400 hover:to-pink-500 shadow-lg hover:shadow-pink-300/50 hover:scale-105'
               : 'bg-pink-200 text-pink-400'
